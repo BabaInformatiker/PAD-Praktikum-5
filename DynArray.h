@@ -1,9 +1,4 @@
 #pragma once
-class Lied {
-public:
-	int zahl;
-
-};
 
 
 class DynArray
