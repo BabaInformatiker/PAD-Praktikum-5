@@ -4,22 +4,31 @@
 
 using namespace std;
 
+
+  
 DynArray::DynArray() { 
 	m_capacity = 2;
 	m_size = 0;
-	m_data = new Lied[m_size];
-
+	m_data = new Lied[m_capacity];
 }
 
-DynArray::DynArray(int newcapacity) {
-	m_capacity = newcapacity;
-	m_size = m_capacity / 2;
-
+DynArray::DynArray(int newCapacity) {
+	m_capacity = newCapacity;
+	m_size = 0;
+        m_data = new Lied[m_capacity];
 }
 
 DynArray::~DynArray() {
-	delete[] m_data;
+    delete[] m_data;
+    m_data = NULL;
 }
+
+DynArray::DynArray(const DynArray& other){
+    m_capacity = other.m_capacity;
+    m_data = new Lied[m_capacity];
+    for (int i = 0; i < m_capacity; i++)
+        m_data[i] = other.m_data[i];
+} 
 
 int DynArray::size(){
 	return m_size;
@@ -29,29 +38,32 @@ int DynArray::capacity() {
 	return m_capacity;
 }
 
-/* void DynArray::print() {
+void DynArray::print() {
 	for (int i = 0; i < m_size; i++) {
-		cout << m_data[i];
+		cout << m_data[i].zahl << endl;
 	}
 }
-*/
 
-void DynArray::resize(int newcapacity) {
-	Lied* copy = new Lied[newcapacity];
 
+void DynArray::resize(int newCapacity) {
+        Lied* copy = new Lied[newCapacity];
+        
 	for (int i = 0; i < m_size; i++)
 		copy[i] = m_data[i];
 
 	delete[] m_data;
 	m_data = copy;
-	delete[] copy;
+        m_capacity = newCapacity; 
 }
 
 void DynArray::push_back(Lied elem) {
-	if (m_size = m_capacity)
-		resize(m_size * 2);
+    if (m_capacity == 0)
+        m_capacity = 1;
+    if (m_size == m_capacity)
+		resize(m_capacity + m_size);
 
-	m_data[m_size + 1] = elem;
+	m_data[m_size] = elem;
+        m_size += 1;
 }
 
 void DynArray::pop_back() {
@@ -62,57 +74,28 @@ void DynArray::pop_back() {
 
 	delete[] m_data;
 	m_data = copy;
-	delete[] copy;
+        m_size -= 1;
 }
 
 void DynArray::erase(int index) {
 	Lied* copy = new Lied[m_size - 1];
-	cin >> index;
 
 	for (int i = 0; i < m_size; i++) {
-		if (i == index)
+            if (i < index)
+                copy[i] = m_data[i];
+            
+            if (i == index)
 			continue;
-		else
-			copy[i] = m_data[i];
+            if (i > index)
+            copy[i-1] = m_data[i];
 	}
 
 	delete[] m_data;
 	m_data = copy;
-	delete[] copy;
+        m_size -= 1;
+	
 }
 
-int main() {
-
-	DynArray a(1);
-
-	Lied li;
-	Lied s;
-	Lied l;
-
-	li.zahl = 10;
-	s.zahl = 15;
-	l.zahl = 20;
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	system("pause");
-	return 0;
-}
+/* Lied& DynArray::at(int index){
+    return double& m_data[index]; 
+} */
